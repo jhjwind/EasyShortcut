@@ -1,0 +1,20 @@
+{
+  "name": "Shortcut",
+  "version": "1.0",
+  "description": "Add shortcuts to the most used buttons/links on a webpage.",
+  "background_page": "background.html",
+  "content_scripts": [
+    {
+      "matches": [ "http://*/*", "https://*/*" ],
+      "run_at": "document_start",
+      "js": [ "jquery-1.4.2.js", "jquery.hotkeys.js", "page.js" ]
+    }
+  ],
+  "browser_action": {
+    "name": "add shortcut",
+    "default_icon": "icon.png"
+  },
+  "permissions": [
+    "tabs", "http://*/*", "https://*/*"
+  ]
+}
