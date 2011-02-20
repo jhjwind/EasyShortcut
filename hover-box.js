@@ -5,8 +5,7 @@
 easyShortcut.shortcuts = {};
 easyShortcut.shortcutBoxes = {};
 easyShortcut.shortcutHandlers = {};
-easyShortcut.shortcutPool = new Array();
-easyShortcut.number = ["1","2","3","4","5","6","7","8","9","0"];
+
 
 $(function(){
   $(document).bind('keydown', 'Alt', function(e){
@@ -18,11 +17,16 @@ $(function(){
     easyShortcut.hideShortcuts();
   });
   
-  $('a').each(function(i, e){ easyShortcut.assignKey(e) }); 
+  easyShortcut.assignKey($('a')); 
 });
 
 easyShortcut.assignKey = function(e){
+	easyShortcut.number = ["1","2","3","4","5","6","7","8","9","0"];
+	easyShortcut.shortcutPool = new Array();
+	
 	$.each(e, function(){
+		
+		e = this;
 
 		var textInfo = null; 
 		
@@ -31,7 +35,6 @@ easyShortcut.assignKey = function(e){
 		};
 		
 		if (textInfo == null && $.trim($(this).text()) != "") {
-			console.log("here");
 			textInfo = $(this).text();
 		};
 		
@@ -48,26 +51,31 @@ easyShortcut.assignKey = function(e){
 		
 		console.log(textInfo);
 		
-		e.shortcut = textInfo.substr(0,1).toLowerCase();
+		var tempShortcut = textInfo.substr(0,1).toLowerCase();
 				
-		console.log(shortcut);
+		console.log(tempShortcut);
 		
-		if ($.inArray(shortcut, easyShortcut.shortcutPool) == -1) 
+		if ($.inArray(tempShortcut, easyShortcut.shortcutPool) == -1) 
 		{
-			easyShortcut.shortcutPool.push(shortcut);
+			easyShortcut.shortcutPool.push(tempShortcut);
+			e.shortcut = tempShortcut;
 		}
 		else{
 			for (i in easyShortcut.number){
-				var shortcutWithNumber = shortcut + i;
+				var shortcutWithNumber = tempShortcut + i;
 				if( $.inArray(shortcutWithNumber, easyShortcut.shortcutPool) == -1){
 					easyShortcut.shortcutPool.push(shortcutWithNumber);
+					e.shortcut = shortcutWithNumber;
 					break;
 				}
 			};
 		};
-    
+		
+		console.log("shortcut! ", e.shortcut, e);
+  
     easyShortcut.shortcuts[e.shortcut] = e;
-    var handler = function(){ easyShortcut.onShortcut(e) };
+    var handler = function(){ easyShortcut.onShortcut(arguments.callee.e) };
+		handler.e = e;
     easyShortcut.shortcutHandlers[e.shortcut] = handler;
     $(document).bind('keyup', 'Alt+' + e.shortcut, handler);
   
