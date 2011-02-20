@@ -5,6 +5,8 @@
 easyShortcut.shortcuts = {};
 easyShortcut.shortcutBoxes = {};
 easyShortcut.shortcutHandlers = {};
+easyShortcut.shortcutPool = new Array();
+easyShortcut.number = ["1","2","3","4","5","6","7","8","9","0"];
 
 $(function(){
   $(document).bind('keydown', 'Alt', function(e){
@@ -20,19 +22,56 @@ $(function(){
 });
 
 easyShortcut.assignKey = function(e){
-  console.log('assigning', e);
-  if(e && e.text){
-    e.shortcut = e.text.substr(0, 1);
-    if(!e.shortcut || easyShortcut.shortcuts[e.shortcut] || e.shortcut.length < 1){
-      console.log('already a: ' + e.shortcut);
-      return;
-    }
+	$.each(e, function(){
+
+		var textInfo = null; 
+		
+		if ($(this).attr('name') !== '') {
+			textInfo = $(this).attr('name');
+		};
+		
+		if (textInfo == null && $.trim($(this).text()) != "") {
+			console.log("here");
+			textInfo = $(this).text();
+		};
+		
+		if (textInfo == null && $(this).has('img') !== null){
+			console.log("has image");
+			console.log($(this).has('img'));
+			if ($($(this).children('img')[0]).attr('alt') !== ''){
+				textInfo = $($(this).children('img')[0]).attr('alt');
+			}
+			else {
+				textInfo = "i";
+			};
+		};
+		
+		console.log(textInfo);
+		
+		e.shortcut = textInfo.substr(0,1).toLowerCase();
+				
+		console.log(shortcut);
+		
+		if ($.inArray(shortcut, easyShortcut.shortcutPool) == -1) 
+		{
+			easyShortcut.shortcutPool.push(shortcut);
+		}
+		else{
+			for (i in easyShortcut.number){
+				var shortcutWithNumber = shortcut + i;
+				if( $.inArray(shortcutWithNumber, easyShortcut.shortcutPool) == -1){
+					easyShortcut.shortcutPool.push(shortcutWithNumber);
+					break;
+				}
+			};
+		};
     
     easyShortcut.shortcuts[e.shortcut] = e;
     var handler = function(){ easyShortcut.onShortcut(e) };
     easyShortcut.shortcutHandlers[e.shortcut] = handler;
     $(document).bind('keyup', 'Alt+' + e.shortcut, handler);
-  }
+  
+	});
 }
 
 easyShortcut.onShortcut = function(elem){
