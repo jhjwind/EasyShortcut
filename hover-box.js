@@ -48,6 +48,8 @@ easyShortcut.displayShortcuts = function(){
     $('body').append(box);
     
     var r = e.getClientRects()[0];
+    if(!r) r = e.getBoundingClientRect();
+    if(!r) return;
     var r2 = box[0].getBoundingClientRect();
     box.css('top', (r.top + window.scrollY + (r.height / 2) - (r2.height / 2)) + 'px');
     box.css('left', (r.right + window.scrollX - (r.width / 2) - (r2.width / 2)) + 'px');
