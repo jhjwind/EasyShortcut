@@ -5,6 +5,8 @@
 easyShortcut.shortcuts = {};
 easyShortcut.shortcutBoxes = {};
 easyShortcut.shortcutHandlers = {};
+easyShortcut.number = ["1","2","3","4","5","6","7","8","9","0"];
+easyShortcut.shortcutPool = new Array();
 
 
 $(function(){
@@ -21,17 +23,18 @@ $(function(){
 });
 
 easyShortcut.assignKey = function(e){
-	easyShortcut.number = ["1","2","3","4","5","6","7","8","9","0"];
-	easyShortcut.shortcutPool = new Array();
 	
 	$.each(e, function(){
-		
-		e = this;
+		console.log(this);
 
 		var textInfo = null; 
 		
 		if ($(this).attr('name') !== '') {
 			textInfo = $(this).attr('name');
+		};
+		
+		if ($(this).attr('title') !== '') {
+			textInfo = $(this).attr('title');
 		};
 		
 		if (textInfo == null && $.trim($(this).text()) != "") {
@@ -58,26 +61,26 @@ easyShortcut.assignKey = function(e){
 		if ($.inArray(tempShortcut, easyShortcut.shortcutPool) == -1) 
 		{
 			easyShortcut.shortcutPool.push(tempShortcut);
-			e.shortcut = tempShortcut;
+			this.shortcut = tempShortcut;
 		}
 		else{
 			for (i in easyShortcut.number){
 				var shortcutWithNumber = tempShortcut + i;
 				if( $.inArray(shortcutWithNumber, easyShortcut.shortcutPool) == -1){
 					easyShortcut.shortcutPool.push(shortcutWithNumber);
-					e.shortcut = shortcutWithNumber;
+					this.shortcut = shortcutWithNumber;
 					break;
 				}
 			};
 		};
 		
-		console.log("shortcut! ", e.shortcut, e);
+		console.log("shortcut! ", this.shortcut, this);
   
-    easyShortcut.shortcuts[e.shortcut] = e;
-    var handler = function(){ easyShortcut.onShortcut(arguments.callee.e) };
-		handler.e = e;
-    easyShortcut.shortcutHandlers[e.shortcut] = handler;
-    $(document).bind('keyup', 'Alt+' + e.shortcut, handler);
+    easyShortcut.shortcuts[this.shortcut] = this;
+    var handler = function(){ easyShortcut.onShortcut(arguments.callee.this) };
+		handler.this = this;
+    easyShortcut.shortcutHandlers[this.shortcut] = handler;
+    $(document).bind('keyup', 'Alt+' + this.shortcut, handler);
   
 	});
 }
