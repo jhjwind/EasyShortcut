@@ -1,0 +1,14 @@
+
+.hover-box {
+	background-color: #cccccc;
+	-webkit-border-radius: 6px;
+	width: 1.5em;
+	height: 1.5em;
+	text-align: center;
+	margin: 0 auto;
+	padding: 0 auto;
+}
+
+.hover-target {
+	/*border: 1px dotted #000000;*/
+}

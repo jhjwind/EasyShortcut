@@ -7,7 +7,8 @@
     {
       "matches": [ "http://*/*", "https://*/*" ],
       "run_at": "document_start",
-      "js": [ "jquery-1.4.2.js", "jquery.hotkeys.js", "page.js" ]
+      "css": ["easy-shortcut.css"],
+      "js": [ "jquery-1.4.2.js", "jquery.hotkeys.js", "page.js", "hover-box.js"]
     }
   ],
   "browser_action": {
